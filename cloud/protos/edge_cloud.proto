@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+service EdgeStorage {
+    rpc StoreFeatureMap (StoreFeatureMapRequest) returns (StoreFeatureMapReply) {}
+    rpc FetchFeatureMap (FetchFeatureMapRequest) returns (FetchFeatureMapReply) {}
+    rpc DeleteFeatureMap (DeleteFeatureMapRequest) returns (DeleteFeatureMapReply) {}
+}
+
+service NetworkSplit {
+    rpc CloudCompute (CloudComputeRequest) returns (CloudComputeReply) {}
+}
+
+message StoreFeatureMapRequest {
+    int32 track_id = 1;
+    repeated double features = 2;
+}
+
+message StoreFeatureMapReply {
+    bool success = 1;
+}
+
+message FetchFeatureMapRequest {
+    int32 track_id = 1;
+}
+
+message FetchFeatureMapReply {
+    bool success = 1;
+    repeated double features = 2;
+}
+
+message DeleteFeatureMapRequest {
+    int32 track_id = 1;
+}
+
+message DeleteFeatureMapReply {
+    bool success = 1;
+}
+
+message CloudComputeRequest {
+    int32 track_id = 1;
+}
+
+message CloudComputeReply {
+    int32 label = 1;
+}

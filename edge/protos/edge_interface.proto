@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+service UploadImage {
+    rpc GetImage (GetImageRequest) returns (GetImageReply) {}
+}
+
+message GetImageRequest {
+    repeated int32 image = 1;
+}
+
+message GetImageReply {
+    int32 lable = 1;
+}

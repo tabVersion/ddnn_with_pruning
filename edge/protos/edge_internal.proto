@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+service Collector {
+    rpc ClassifyResults (ClassifyResultsRequest) returns (ClassifyResultsReply) {}
+    // rpc GetStatus (GetStatusRequest) returns (GetStatusReply) {}
+}
+
+message ClassifyResultsRequest {
+    int32 track_id = 1;
+    repeated int32 image = 2;
+}
+
+message ClassifyResultsReply {
+    repeated double results = 1;
+}
+
+// message GetStatusRequest {
+//     int32 track_id = 1;
+// }
+
+// message GetStatusReply {
+//     int32 status = 1;
+//     // 0 -> done
+//     // 1 -> running
+//     // 2 -> waiting
+// }
