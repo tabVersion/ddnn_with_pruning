@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import edge_cloud_pb2 as edge__cloud__pb2
+import protos.edge_cloud_pb2 as edge__cloud__pb2
 
 
 class EdgeStorageStub(object):

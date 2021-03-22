@@ -12,7 +12,9 @@ class EdgeStorage(edge_cloud_pb2_grpc.EdgeStorage):
 
     def StoreFeatureMap(self, request, context):
         track_id = request.track_id
-        features = request.features
+        features = list(request.features)
+        logging.info(f"[EdgeStorage.StoreFeatureMap] track_id: {track_id},"
+                     f"features: {features}")
 
         try:
             with open(f"./track_id_{track_id}", "wb") as f:
@@ -29,8 +31,8 @@ class EdgeStorage(edge_cloud_pb2_grpc.EdgeStorage):
                 features = pickle.load(f)
         except Exception as e:
             logging.warning(f"[FetchFeatureMap] err: {e}")
-            return edge_cloud_pb2.StoreFeatureMapReply(success=False)
-        return edge_cloud_pb2.StoreFeatureMapReply(success=True,
+            return edge_cloud_pb2.FetchFeatureMapReply(success=False)
+        return edge_cloud_pb2.FetchFeatureMapReply(success=True,
                                                    features=features)
 
     def DeleteFeatureMap(self, request, context):
@@ -50,7 +52,7 @@ def start_server():
                                                           server)
     server.add_insecure_port('[::]:50050')
     server.start()
-    server.wait_for_termination()
+    # server.wait_for_termination()
     return server
 
 

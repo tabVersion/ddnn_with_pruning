@@ -1,5 +1,6 @@
 import unittest
 import grpc
+import logging
 
 import storage_server
 from protos import edge_cloud_pb2_grpc
@@ -38,8 +39,8 @@ class TestStorageServer(unittest.TestCase):
         )
         self.assertEqual(resp.success, True)
 
-        server.GracefulStop()
-
 
 if __name__ == '__main__':
     unittest.main()
+    logging.basicConfig()
+    logging.setLevel(logging.DEBUG)
