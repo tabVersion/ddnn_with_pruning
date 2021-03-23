@@ -20,12 +20,17 @@ class TestCloudServer(unittest.TestCase):
         """
         c_server = cloud_server.start_server()
         time.sleep(1)
-        pro = subprocess.Popen("cd ../edge && python storage_server.py &",
-                               # stdout=subprocess.PIPE,
-                               shell=True, preexec_fn=os.setsid)
+        edge1 = subprocess.Popen("cd ../edge && python storage_server.py &",
+                                 stdout=subprocess.PIPE,
+                                 shell=True,
+                                 preexec_fn=os.setsid)
+        edge2 = subprocess.Popen("cd ../edge && python storage_server.py 50051 &",
+                                 stdout=subprocess.PIPE,
+                                 shell=True,
+                                 preexec_fn=os.setsid)
         time.sleep(1)
         # register
-        self.assertEqual(len(cloud_server.edge_addr), 1)
+        self.assertEqual(len(cloud_server.edge_addr), 2)
 
         # ===========
 
@@ -47,7 +52,8 @@ class TestCloudServer(unittest.TestCase):
         self.assertEqual(resp.label, 0)
 
         # cleaning up
-        os.killpg(os.getpgid(pro.pid), signal.SIGTERM)
+        os.killpg(os.getpgid(edge1.pid), signal.SIGTERM)
+        os.killpg(os.getpgid(edge2.pid), signal.SIGTERM)
 
 
 if __name__ == '__main__':

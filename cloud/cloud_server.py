@@ -12,8 +12,8 @@ edge_addr = dict()
 
 class NetworkSplitService(edge_cloud_pb2_grpc.NetworkSplit):
 
-    def fetch_feature_map(self, idx, store, address='localhost'):
-        channel = grpc.insecure_channel(f'{address}:50050')
+    def fetch_feature_map(self, idx, store, address='localhost:50050'):
+        channel = grpc.insecure_channel(address)
         request = edge_cloud_pb2_grpc.EdgeStorageStub(channel)
         resp = request.FetchFeatureMap(
             edge_cloud_pb2.FetchFeatureMapRequest(track_id=idx)
@@ -27,8 +27,9 @@ class NetworkSplitService(edge_cloud_pb2_grpc.NetworkSplit):
 
     def CloudCompute(self, request, context):
         features = [None] * 4
+        for _, addr in edge_addr.items():
+            self.fetch_feature_map(request.track_id, features, address=addr)
         logging.info(f"[CloudCompute] get request for id: {request.track_id}")
-        self.fetch_feature_map(request.track_id, features)
         return edge_cloud_pb2.CloudComputeReply(label=0)
 
 
