@@ -19,10 +19,74 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x10\x65\x64ge_cloud.proto\"<\n\x16StoreFeatureMapRequest\x12\x10\n\x08track_id\x18\x01 \x01(\x05\x12\x10\n\x08\x66\x65\x61tures\x18\x02 \x03(\x01\"\'\n\x14StoreFeatureMapReply\x12\x0f\n\x07success\x18\x01 \x01(\x08\"*\n\x16\x46\x65tchFeatureMapRequest\x12\x10\n\x08track_id\x18\x01 \x01(\x05\"9\n\x14\x46\x65tchFeatureMapReply\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x10\n\x08\x66\x65\x61tures\x18\x02 \x03(\x01\"+\n\x17\x44\x65leteFeatureMapRequest\x12\x10\n\x08track_id\x18\x01 \x01(\x05\"(\n\x15\x44\x65leteFeatureMapReply\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\'\n\x13\x43loudComputeRequest\x12\x10\n\x08track_id\x18\x01 \x01(\x05\"\"\n\x11\x43loudComputeReply\x12\r\n\x05label\x18\x01 \x01(\x05\x32\xdf\x01\n\x0b\x45\x64geStorage\x12\x43\n\x0fStoreFeatureMap\x12\x17.StoreFeatureMapRequest\x1a\x15.StoreFeatureMapReply\"\x00\x12\x43\n\x0f\x46\x65tchFeatureMap\x12\x17.FetchFeatureMapRequest\x1a\x15.FetchFeatureMapReply\"\x00\x12\x46\n\x10\x44\x65leteFeatureMap\x12\x18.DeleteFeatureMapRequest\x1a\x16.DeleteFeatureMapReply\"\x00\x32J\n\x0cNetworkSplit\x12:\n\x0c\x43loudCompute\x12\x14.CloudComputeRequest\x1a\x12.CloudComputeReply\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x10\x65\x64ge_cloud.proto\"\x1f\n\x0fRegisterRequest\x12\x0c\n\x04\x61\x64\x64r\x18\x01 \x01(\t\"%\n\rRegisterReply\x12\x14\n\x0c\x64\x65vice_index\x18\x01 \x01(\x05\"<\n\x16StoreFeatureMapRequest\x12\x10\n\x08track_id\x18\x01 \x01(\x05\x12\x10\n\x08\x66\x65\x61tures\x18\x02 \x03(\x01\"\'\n\x14StoreFeatureMapReply\x12\x0f\n\x07success\x18\x01 \x01(\x08\"*\n\x16\x46\x65tchFeatureMapRequest\x12\x10\n\x08track_id\x18\x01 \x01(\x05\"9\n\x14\x46\x65tchFeatureMapReply\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x10\n\x08\x66\x65\x61tures\x18\x02 \x03(\x01\"+\n\x17\x44\x65leteFeatureMapRequest\x12\x10\n\x08track_id\x18\x01 \x01(\x05\"(\n\x15\x44\x65leteFeatureMapReply\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\'\n\x13\x43loudComputeRequest\x12\x10\n\x08track_id\x18\x01 \x01(\x05\"\"\n\x11\x43loudComputeReply\x12\r\n\x05label\x18\x01 \x01(\x05\x32\xdf\x01\n\x0b\x45\x64geStorage\x12\x43\n\x0fStoreFeatureMap\x12\x17.StoreFeatureMapRequest\x1a\x15.StoreFeatureMapReply\"\x00\x12\x43\n\x0f\x46\x65tchFeatureMap\x12\x17.FetchFeatureMapRequest\x1a\x15.FetchFeatureMapReply\"\x00\x12\x46\n\x10\x44\x65leteFeatureMap\x12\x18.DeleteFeatureMapRequest\x1a\x16.DeleteFeatureMapReply\"\x00\x32J\n\x0cNetworkSplit\x12:\n\x0c\x43loudCompute\x12\x14.CloudComputeRequest\x1a\x12.CloudComputeReply\"\x00\x32>\n\x0c\x45\x64geRegister\x12.\n\x08Register\x12\x10.RegisterRequest\x1a\x0e.RegisterReply\"\x00\x62\x06proto3'
 )
 
 
+
+
+_REGISTERREQUEST = _descriptor.Descriptor(
+  name='RegisterRequest',
+  full_name='RegisterRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='addr', full_name='RegisterRequest.addr', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=20,
+  serialized_end=51,
+)
+
+
+_REGISTERREPLY = _descriptor.Descriptor(
+  name='RegisterReply',
+  full_name='RegisterReply',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='device_index', full_name='RegisterReply.device_index', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=53,
+  serialized_end=90,
+)
 
 
 _STOREFEATUREMAPREQUEST = _descriptor.Descriptor(
@@ -59,8 +123,8 @@ _STOREFEATUREMAPREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=20,
-  serialized_end=80,
+  serialized_start=92,
+  serialized_end=152,
 )
 
 
@@ -91,8 +155,8 @@ _STOREFEATUREMAPREPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=82,
-  serialized_end=121,
+  serialized_start=154,
+  serialized_end=193,
 )
 
 
@@ -123,8 +187,8 @@ _FETCHFEATUREMAPREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=123,
-  serialized_end=165,
+  serialized_start=195,
+  serialized_end=237,
 )
 
 
@@ -162,8 +226,8 @@ _FETCHFEATUREMAPREPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=167,
-  serialized_end=224,
+  serialized_start=239,
+  serialized_end=296,
 )
 
 
@@ -194,8 +258,8 @@ _DELETEFEATUREMAPREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=226,
-  serialized_end=269,
+  serialized_start=298,
+  serialized_end=341,
 )
 
 
@@ -226,8 +290,8 @@ _DELETEFEATUREMAPREPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=271,
-  serialized_end=311,
+  serialized_start=343,
+  serialized_end=383,
 )
 
 
@@ -258,8 +322,8 @@ _CLOUDCOMPUTEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=313,
-  serialized_end=352,
+  serialized_start=385,
+  serialized_end=424,
 )
 
 
@@ -290,10 +354,12 @@ _CLOUDCOMPUTEREPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=354,
-  serialized_end=388,
+  serialized_start=426,
+  serialized_end=460,
 )
 
+DESCRIPTOR.message_types_by_name['RegisterRequest'] = _REGISTERREQUEST
+DESCRIPTOR.message_types_by_name['RegisterReply'] = _REGISTERREPLY
 DESCRIPTOR.message_types_by_name['StoreFeatureMapRequest'] = _STOREFEATUREMAPREQUEST
 DESCRIPTOR.message_types_by_name['StoreFeatureMapReply'] = _STOREFEATUREMAPREPLY
 DESCRIPTOR.message_types_by_name['FetchFeatureMapRequest'] = _FETCHFEATUREMAPREQUEST
@@ -303,6 +369,20 @@ DESCRIPTOR.message_types_by_name['DeleteFeatureMapReply'] = _DELETEFEATUREMAPREP
 DESCRIPTOR.message_types_by_name['CloudComputeRequest'] = _CLOUDCOMPUTEREQUEST
 DESCRIPTOR.message_types_by_name['CloudComputeReply'] = _CLOUDCOMPUTEREPLY
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
+RegisterRequest = _reflection.GeneratedProtocolMessageType('RegisterRequest', (_message.Message,), {
+  'DESCRIPTOR' : _REGISTERREQUEST,
+  '__module__' : 'edge_cloud_pb2'
+  # @@protoc_insertion_point(class_scope:RegisterRequest)
+  })
+_sym_db.RegisterMessage(RegisterRequest)
+
+RegisterReply = _reflection.GeneratedProtocolMessageType('RegisterReply', (_message.Message,), {
+  'DESCRIPTOR' : _REGISTERREPLY,
+  '__module__' : 'edge_cloud_pb2'
+  # @@protoc_insertion_point(class_scope:RegisterReply)
+  })
+_sym_db.RegisterMessage(RegisterReply)
 
 StoreFeatureMapRequest = _reflection.GeneratedProtocolMessageType('StoreFeatureMapRequest', (_message.Message,), {
   'DESCRIPTOR' : _STOREFEATUREMAPREQUEST,
@@ -369,8 +449,8 @@ _EDGESTORAGE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=391,
-  serialized_end=614,
+  serialized_start=463,
+  serialized_end=686,
   methods=[
   _descriptor.MethodDescriptor(
     name='StoreFeatureMap',
@@ -415,8 +495,8 @@ _NETWORKSPLIT = _descriptor.ServiceDescriptor(
   index=1,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=616,
-  serialized_end=690,
+  serialized_start=688,
+  serialized_end=762,
   methods=[
   _descriptor.MethodDescriptor(
     name='CloudCompute',
@@ -432,5 +512,31 @@ _NETWORKSPLIT = _descriptor.ServiceDescriptor(
 _sym_db.RegisterServiceDescriptor(_NETWORKSPLIT)
 
 DESCRIPTOR.services_by_name['NetworkSplit'] = _NETWORKSPLIT
+
+
+_EDGEREGISTER = _descriptor.ServiceDescriptor(
+  name='EdgeRegister',
+  full_name='EdgeRegister',
+  file=DESCRIPTOR,
+  index=2,
+  serialized_options=None,
+  create_key=_descriptor._internal_create_key,
+  serialized_start=764,
+  serialized_end=826,
+  methods=[
+  _descriptor.MethodDescriptor(
+    name='Register',
+    full_name='EdgeRegister.Register',
+    index=0,
+    containing_service=None,
+    input_type=_REGISTERREQUEST,
+    output_type=_REGISTERREPLY,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+])
+_sym_db.RegisterServiceDescriptor(_EDGEREGISTER)
+
+DESCRIPTOR.services_by_name['EdgeRegister'] = _EDGEREGISTER
 
 # @@protoc_insertion_point(module_scope)
