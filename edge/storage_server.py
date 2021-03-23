@@ -64,7 +64,8 @@ def start_server(port=50050, standalone=False):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     edge_cloud_pb2_grpc.add_EdgeStorageServicer_to_server(EdgeStorage(),
                                                           server)
-    register(port)
+    if standalone:
+        register(port)
     server.add_insecure_port(f'[::]:{port}')
     server.start()
     logging.info(f"[start_server] start storage server at port {port}")
