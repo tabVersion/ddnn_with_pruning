@@ -36,4 +36,4 @@ jobs:
         cd edge && python test_storage_server.py
     - name: Test Cloud Server
       run: |
-        cd ../cloud && python test_cloud_server.py
+        cd cloud && python test_cloud_server.py
