@@ -1,0 +1,20 @@
+version = 1
+
+test_patterns = [
+    "edge/test_*.py",
+    "cloud/test_*.py",
+    "interface/test_*.py"
+]
+
+exclude_patterns = [
+    "edge/protos/*",
+    "interface/protos/*",
+    "cloud/protos/*"
+]
+
+[[analyzers]]
+name = "python"
+enabled = true
+
+  [analyzers.meta]
+  runtime_version = "3.x.x"
