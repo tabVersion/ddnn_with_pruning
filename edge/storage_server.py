@@ -57,6 +57,7 @@ def register(port):
     resp = request.Register(
         edge_cloud_pb2.RegisterRequest(addr=host + ':' + str(port))
     )
+    logging.info(f"[register] device number: {resp.device_index}")
     return resp.device_index
 
 
