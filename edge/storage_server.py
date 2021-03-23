@@ -16,7 +16,6 @@ class EdgeStorage(edge_cloud_pb2_grpc.EdgeStorage):
         features = list(request.features)
         logging.info(f"[EdgeStorage.StoreFeatureMap] track_id: {track_id},"
                      f"features: {features}")
-
         try:
             with open(f"./track_id_{track_id}", "wb") as f:
                 pickle.dump(features, f)
@@ -33,6 +32,8 @@ class EdgeStorage(edge_cloud_pb2_grpc.EdgeStorage):
         except Exception as e:
             logging.warning(f"[FetchFeatureMap] err: {e}")
             return edge_cloud_pb2.FetchFeatureMapReply(success=False)
+        logging.info(f"[FetchFeatureMap] request for index: {track_id}, "
+                     f"features: {features}")
         return edge_cloud_pb2.FetchFeatureMapReply(success=True,
                                                    features=features)
 
@@ -44,6 +45,7 @@ class EdgeStorage(edge_cloud_pb2_grpc.EdgeStorage):
         except Exception as e:
             logging.warning(f"[DeleteFeatureMap] err: {e}")
             return edge_cloud_pb2.DeleteFeatureMapReply(success=False)
+        logging.info(f"[DeleteFeatureMap] delete storage for index: {track_id}")
         return edge_cloud_pb2.StoreFeatureMapReply(success=True)
 
 
