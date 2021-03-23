@@ -46,11 +46,11 @@ class EdgeStorage(edge_cloud_pb2_grpc.EdgeStorage):
         return edge_cloud_pb2.StoreFeatureMapReply(success=True)
 
 
-def start_server():
+def start_server(port=50050):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     edge_cloud_pb2_grpc.add_EdgeStorageServicer_to_server(EdgeStorage(),
                                                           server)
-    server.add_insecure_port('[::]:50050')
+    server.add_insecure_port(f'[::]:{port}')
     server.start()
     # server.wait_for_termination()
     return server
