@@ -3,6 +3,7 @@ from concurrent import futures
 import grpc
 import pickle
 import os
+import argparse
 
 from protos import edge_cloud_pb2
 from protos import edge_cloud_pb2_grpc
@@ -46,16 +47,21 @@ class EdgeStorage(edge_cloud_pb2_grpc.EdgeStorage):
         return edge_cloud_pb2.StoreFeatureMapReply(success=True)
 
 
-def start_server(port=50050):
+def start_server(port=50050, standalone=False):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     edge_cloud_pb2_grpc.add_EdgeStorageServicer_to_server(EdgeStorage(),
                                                           server)
     server.add_insecure_port(f'[::]:{port}')
     server.start()
-    # server.wait_for_termination()
+    logging.info(f"[start_server] start storage server at port {port}")
+    if standalone:
+        server.wait_for_termination()
     return server
 
 
 if __name__ == '__main__':
-    logging.basicConfig()
-    start_server()
+    parser = argparse.ArgumentParser(description='storage service for edge server')
+    parser.add_argument('port', type=int, default=50050, nargs='?', help='open service at which port')
+    args = parser.parse_args()
+    logging.basicConfig(level=logging.DEBUG)
+    start_server(args.port, True)
