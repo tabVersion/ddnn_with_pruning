@@ -3,12 +3,11 @@ import argparse
 from concurrent import futures
 from threading import Lock
 import grpc
-import pickle
-import os
-import json
 
 from protos import edge_cloud_pb2
 from protos import edge_cloud_pb2_grpc
+
+edge_addr = dict()
 
 
 class NetworkSplitService(edge_cloud_pb2_grpc.NetworkSplit):
@@ -33,9 +32,25 @@ class NetworkSplitService(edge_cloud_pb2_grpc.NetworkSplit):
         return edge_cloud_pb2.CloudComputeReply(label=0)
 
 
+class EdgeRegisterService(edge_cloud_pb2_grpc.EdgeRegister):
+    def __init__(self):
+        super(EdgeRegisterService, self).__init__()
+        self.register_mutex = Lock()
+
+    def Register(self, request, context):
+        self.register_mutex.acquire()
+        idx = len(edge_addr)
+        edge_addr[idx] = request.addr
+        logging.info(f"[Register] device: {idx}, addr: {request.addr}")
+        self.register_mutex.release()
+        return edge_cloud_pb2.RegisterReply(device_index=idx)
+
+
 def start_server(port=50000, standalone=False):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     edge_cloud_pb2_grpc.add_NetworkSplitServicer_to_server(NetworkSplitService(),
+                                                           server)
+    edge_cloud_pb2_grpc.add_EdgeRegisterServicer_to_server(EdgeRegisterService(),
                                                            server)
     server.add_insecure_port(f'[::]:{port}')
     server.start()

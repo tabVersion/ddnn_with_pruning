@@ -4,6 +4,7 @@ import grpc
 import pickle
 import os
 import argparse
+import socket
 
 from protos import edge_cloud_pb2
 from protos import edge_cloud_pb2_grpc
@@ -49,10 +50,21 @@ class EdgeStorage(edge_cloud_pb2_grpc.EdgeStorage):
         return edge_cloud_pb2.StoreFeatureMapReply(success=True)
 
 
+def register(port):
+    channel = grpc.insecure_channel('localhost:50000')
+    request = edge_cloud_pb2_grpc.EdgeRegisterStub(channel)
+    host = socket.gethostbyname(socket.gethostname())
+    resp = request.Register(
+        edge_cloud_pb2.RegisterRequest(addr=host + ':' + str(port))
+    )
+    return resp.device_index
+
+
 def start_server(port=50050, standalone=False):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     edge_cloud_pb2_grpc.add_EdgeStorageServicer_to_server(EdgeStorage(),
                                                           server)
+    register(port)
     server.add_insecure_port(f'[::]:{port}')
     server.start()
     logging.info(f"[start_server] start storage server at port {port}")
