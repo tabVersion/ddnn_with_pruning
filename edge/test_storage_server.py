@@ -13,7 +13,7 @@ class TestStorageServer(unittest.TestCase):
         """
         test all functions in storage_server.py: store, fetch, delete
         """
-        storage_server.start_server()
+        server = storage_server.start_server()
         features = [1., 2., 3., 4.]
 
         channel = grpc.insecure_channel('localhost:50050')
