@@ -12,6 +12,13 @@ service NetworkSplit {
 
 service EdgeRegister {
     rpc Register (RegisterRequest) returns (RegisterReply) {}
+    rpc DeviceQuery (DeviceQueryRequest) returns (DeviceQueryReply) {}
+}
+
+message DeviceQueryRequest {}
+
+message DeviceQueryReply {
+    map<int32, string> device_addr = 1;
 }
 
 message RegisterRequest {

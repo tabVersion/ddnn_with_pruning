@@ -207,12 +207,23 @@ class EdgeRegisterStub(object):
                 request_serializer=edge__cloud__pb2.RegisterRequest.SerializeToString,
                 response_deserializer=edge__cloud__pb2.RegisterReply.FromString,
                 )
+        self.DeviceQuery = channel.unary_unary(
+                '/EdgeRegister/DeviceQuery',
+                request_serializer=edge__cloud__pb2.DeviceQueryRequest.SerializeToString,
+                response_deserializer=edge__cloud__pb2.DeviceQueryReply.FromString,
+                )
 
 
 class EdgeRegisterServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Register(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeviceQuery(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -225,6 +236,11 @@ def add_EdgeRegisterServicer_to_server(servicer, server):
                     servicer.Register,
                     request_deserializer=edge__cloud__pb2.RegisterRequest.FromString,
                     response_serializer=edge__cloud__pb2.RegisterReply.SerializeToString,
+            ),
+            'DeviceQuery': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeviceQuery,
+                    request_deserializer=edge__cloud__pb2.DeviceQueryRequest.FromString,
+                    response_serializer=edge__cloud__pb2.DeviceQueryReply.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -250,5 +266,22 @@ class EdgeRegister(object):
         return grpc.experimental.unary_unary(request, target, '/EdgeRegister/Register',
             edge__cloud__pb2.RegisterRequest.SerializeToString,
             edge__cloud__pb2.RegisterReply.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DeviceQuery(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/EdgeRegister/DeviceQuery',
+            edge__cloud__pb2.DeviceQueryRequest.SerializeToString,
+            edge__cloud__pb2.DeviceQueryReply.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
