@@ -10,7 +10,7 @@ from protos import edge_cloud_pb2_grpc
 edge_addr = dict()
 
 
-class NetworkSplitService(edge_cloud_pb2_grpc.NetworkSplit):
+class NetworkSplitService(edge_cloud_pb2_grpc.NetworkSplitServicer):
 
     def fetch_feature_map(self, idx, store, address='localhost:50050'):
         channel = grpc.insecure_channel(address)
@@ -33,7 +33,7 @@ class NetworkSplitService(edge_cloud_pb2_grpc.NetworkSplit):
         return edge_cloud_pb2.CloudComputeReply(label=0)
 
 
-class EdgeRegisterService(edge_cloud_pb2_grpc.EdgeRegister):
+class EdgeRegisterService(edge_cloud_pb2_grpc.EdgeRegisterServicer):
     def __init__(self):
         super(EdgeRegisterService, self).__init__()
         self.register_mutex = Lock()

@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import edge_interface_pb2 as edge__interface__pb2
+import protos.edge_interface_pb2 as edge__interface__pb2
 
 
 class UploadImageStub(object):
