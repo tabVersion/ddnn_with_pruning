@@ -51,6 +51,14 @@ class TestCloudServer(unittest.TestCase):
         )
         self.assertEqual(resp.label, 0)
 
+        # ===========
+
+        request = edge_cloud_pb2_grpc.EdgeRegisterStub(channel)
+        resp = request.DeviceQuery(
+            edge_cloud_pb2.DeviceQueryRequest()
+        )
+        self.assertEqual(len(resp.device_addr), 2)
+
         # cleaning up
         os.killpg(os.getpgid(edge1.pid), signal.SIGTERM)
         os.killpg(os.getpgid(edge2.pid), signal.SIGTERM)

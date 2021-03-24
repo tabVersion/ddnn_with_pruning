@@ -46,6 +46,9 @@ class EdgeRegisterService(edge_cloud_pb2_grpc.EdgeRegister):
         self.register_mutex.release()
         return edge_cloud_pb2.RegisterReply(device_index=idx)
 
+    def DeviceQuery(self, request, context):
+        return edge_cloud_pb2.DeviceQueryReply(device_addr=edge_addr)
+
 
 def start_server(port=50000, standalone=False):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
