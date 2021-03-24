@@ -33,7 +33,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test Edge Server
       run: |
-        cd edge && python test_storage_server.py
+        cd edge && python test_edge_server.py
     - name: Test Cloud Server
       run: |
         cd cloud && python test_cloud_server.py
