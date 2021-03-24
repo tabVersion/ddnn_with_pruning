@@ -2,7 +2,7 @@ import unittest
 import grpc
 import logging
 
-import storage_server
+import edge_server
 from protos import edge_cloud_pb2_grpc
 from protos import edge_cloud_pb2
 
@@ -11,9 +11,9 @@ class TestStorageServer(unittest.TestCase):
 
     def test_all_func(self):
         """
-        test all functions in storage_server.py: store, fetch, delete
+        test all functions in edge_server.py: store, fetch, delete
         """
-        server = storage_server.start_server()
+        server = edge_server.start_server()
         features = [1., 2., 3., 4.]
 
         channel = grpc.insecure_channel('localhost:50050')

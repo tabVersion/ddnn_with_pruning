@@ -20,11 +20,11 @@ class TestCloudServer(unittest.TestCase):
         """
         c_server = cloud_server.start_server()
         time.sleep(1)
-        edge1 = subprocess.Popen("cd ../edge && python storage_server.py &",
+        edge1 = subprocess.Popen("cd ../edge && python edge_server.py &",
                                  stdout=subprocess.PIPE,
                                  shell=True,
                                  preexec_fn=os.setsid)
-        edge2 = subprocess.Popen("cd ../edge && python storage_server.py 50051 &",
+        edge2 = subprocess.Popen("cd ../edge && python edge_server.py 50051 &",
                                  stdout=subprocess.PIPE,
                                  shell=True,
                                  preexec_fn=os.setsid)

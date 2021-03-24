@@ -6,8 +6,14 @@ import os
 import argparse
 import socket
 
+from computing_server import edge_compute
 from protos import edge_cloud_pb2
 from protos import edge_cloud_pb2_grpc
+from protos import edge_internal_pb2
+from protos import edge_internal_pb2_grpc
+
+
+device_num = 0
 
 
 class EdgeStorage(edge_cloud_pb2_grpc.EdgeStorage):
@@ -58,13 +64,35 @@ def register(port):
         edge_cloud_pb2.RegisterRequest(addr=host + ':' + str(port))
     )
     logging.info(f"[register] device number: {resp.device_index}")
+    device_num = resp.device_index
     return resp.device_index
+
+
+class CollectorService(edge_internal_pb2_grpc.Collector):
+
+    def ClassifyResults(self, request, context):
+        track_id = request.track_id
+        image = request.image
+        results, feature_map = edge_compute(track_id, image)
+
+        # TODO store feature map to local storage using rpc call
+        try:
+            with open(f"./track_id_{track_id}", "wb") as f:
+                pickle.dump(feature_map, f)
+            logging.info(f"[ClassifyResults] store success: "
+                         f"track_id: {track_id}, features: {feature_map}")
+        except Exception as e:
+            logging.warning(f"[ClassifyResults] err: {e}")
+
+        return edge_internal_pb2.ClassifyResultsReply(results=results)
 
 
 def start_server(port=50050, standalone=False):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     edge_cloud_pb2_grpc.add_EdgeStorageServicer_to_server(EdgeStorage(),
                                                           server)
+    edge_internal_pb2_grpc.add_CollectorServicer_to_server(CollectorService(),
+                                                           server)
     if standalone:
         register(port)
     server.add_insecure_port(f'[::]:{port}')
