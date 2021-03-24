@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import edge_internal_pb2 as edge__internal__pb2
+import protos.edge_internal_pb2 as edge__internal__pb2
 
 
 class CollectorStub(object):
