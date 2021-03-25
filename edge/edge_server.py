@@ -6,7 +6,6 @@ import os
 import argparse
 import socket
 from threading import Lock, Thread
-import numpy as np
 
 from computing_server import edge_compute, aggregate
 from protos import edge_cloud_pb2
