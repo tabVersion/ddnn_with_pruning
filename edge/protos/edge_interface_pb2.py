@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x14\x65\x64ge_interface.proto\" \n\x0fGetImageRequest\x12\r\n\x05image\x18\x01 \x03(\x05\"\x1e\n\rGetImageReply\x12\r\n\x05lable\x18\x01 \x01(\x05\x32=\n\x0bUploadImage\x12.\n\x08GetImage\x12\x10.GetImageRequest\x1a\x0e.GetImageReply\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x14\x65\x64ge_interface.proto\" \n\x0fGetImageRequest\x12\r\n\x05image\x18\x01 \x03(\x05\"\x1e\n\rGetImageReply\x12\r\n\x05label\x18\x01 \x01(\x05\x32=\n\x0bUploadImage\x12.\n\x08GetImage\x12\x10.GetImageRequest\x1a\x0e.GetImageReply\"\x00\x62\x06proto3'
 )
 
 
@@ -66,7 +66,7 @@ _GETIMAGEREPLY = _descriptor.Descriptor(
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='lable', full_name='GetImageReply.lable', index=0,
+      name='label', full_name='GetImageReply.label', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,

@@ -9,5 +9,5 @@ message GetImageRequest {
 }
 
 message GetImageReply {
-    int32 lable = 1;
+    int32 label = 1;
 }
