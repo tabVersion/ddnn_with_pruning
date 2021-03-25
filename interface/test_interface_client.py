@@ -45,6 +45,9 @@ class TestEdgeInterface(unittest.TestCase):
             edge_interface_pb2.GetImageRequest(image=[1, 2, 3])
         )
         self.assertEqual(resp.label, 0)
+        os.killpg(os.getpgid(edge1.pid), signal.SIGTERM)
+        os.killpg(os.getpgid(edge2.pid), signal.SIGTERM)
+        os.killpg(os.getpgid(cloud_server.pid), signal.SIGTERM)
 
 
 if __name__ == '__main__':

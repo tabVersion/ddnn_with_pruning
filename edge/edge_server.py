@@ -126,9 +126,8 @@ class UploadImageService(edge_interface_pb2_grpc.UploadImageServicer):
             return edge_interface_pb2.GetImageReply(label=resp.label)
 
 
-class FetchUtils(object):
+class FetchUtils:
     def __init__(self, edge_addr, track_id, image):
-        super(FetchUtils, self).__init__()
         self.collect_mutex = Lock()
         self.edge_addr = edge_addr
         self.res_collect = [None] * len(edge_addr)
