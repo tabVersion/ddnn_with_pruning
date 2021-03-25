@@ -68,6 +68,7 @@ def register(port):
         edge_cloud_pb2.RegisterRequest(addr=host + ':' + str(port))
     )
     logging.info(f"[register] device number: {resp.device_index}")
+    global device_num
     device_num = resp.device_index
     return resp.device_index
 
@@ -91,24 +92,24 @@ class CollectorService(edge_internal_pb2_grpc.CollectorServicer):
         return edge_internal_pb2.ClassifyResultsReply(results=results)
 
 
+def get_edge_address():
+    channel = grpc.insecure_channel('localhost:50000')
+    request = edge_cloud_pb2_grpc.EdgeRegisterStub(channel)
+    resp = request.DeviceQuery(
+        edge_cloud_pb2.DeviceQueryRequest()
+    )
+    return resp.device_addr
+
+
 class UploadImageService(edge_interface_pb2_grpc.UploadImageServicer):
     def __init__(self):
         super(UploadImageService, self).__init__()
         self.track_id = 0
         self.accumulate_mutex = Lock()
 
-    @staticmethod
-    def get_edge_address():
-        channel = grpc.insecure_channel('localhost:50000')
-        request = edge_cloud_pb2_grpc.EdgeRegisterStub(channel)
-        resp = request.DeviceQuery(
-            edge_cloud_pb2.DeviceQueryRequest()
-        )
-        return resp.device_addr
-
     def GetImage(self, request, context):
         logging.info(f"[GetImage] get request: image: {request.image}")
-        edge_addr = self.get_edge_address()
+        edge_addr = get_edge_address()
         track_id = self.track_id
         with self.accumulate_mutex:
             self.track_id += 1
@@ -159,7 +160,7 @@ class FetchUtils(object):
                              self.track_id,
                              self.image))
             t.start()
-            threads.appned(t)
+            threads.append(t)
         for t in threads:
             t.join()
 
