@@ -37,3 +37,6 @@ jobs:
     - name: Test Cloud Server
       run: |
         cd cloud && python test_cloud_server.py
+    - name: Test interface
+      run: |
+        cd interface && python test_interface_client.py
