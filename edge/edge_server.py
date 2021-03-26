@@ -37,7 +37,7 @@ class EdgeStorage(edge_cloud_pb2_grpc.EdgeStorageServicer):
     def FetchFeatureMap(self, request, context):
         track_id = request.track_id
         try:
-            with open(f"./track_id_{track_id}", "rb") as f:
+            with open(f"./device_{device_num}_track_id_{track_id}", "rb") as f:
                 features = pickle.load(f)
         except Exception as e:
             logging.warning(f"[FetchFeatureMap] err: {e}")
