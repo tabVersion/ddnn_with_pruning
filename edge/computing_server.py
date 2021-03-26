@@ -1,4 +1,5 @@
 import time
+import logging
 
 
 def edge_compute(track_id, image):
@@ -11,4 +12,5 @@ def edge_compute(track_id, image):
 
 
 def aggregate(res):
-    return True
+    logging.info(f"[aggregate] get edge results: {res}")
+    return False

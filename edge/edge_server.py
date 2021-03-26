@@ -15,7 +15,6 @@ from protos import edge_internal_pb2_grpc
 from protos import edge_interface_pb2
 from protos import edge_interface_pb2_grpc
 
-
 device_num = None
 
 
@@ -26,8 +25,9 @@ class EdgeStorage(edge_cloud_pb2_grpc.EdgeStorageServicer):
         features = list(request.features)
         logging.info(f"[EdgeStorage.StoreFeatureMap] track_id: {track_id},"
                      f"features: {features}")
+        global device_num
         try:
-            with open(f"./track_id_{track_id}", "wb") as f:
+            with open(f"./device_{device_num}_track_id_{track_id}", "wb") as f:
                 pickle.dump(features, f)
         except Exception as e:
             logging.warning(f"[StoreFeatureMap] err: {e}")
@@ -49,13 +49,15 @@ class EdgeStorage(edge_cloud_pb2_grpc.EdgeStorageServicer):
 
     def DeleteFeatureMap(self, request, context):
         track_id = request.track_id
+        global device_num
         try:
-            if os.path.exists(f"./track_id_{track_id}"):
-                os.remove(f"./track_id_{track_id}")
+            if os.path.exists(f"./device_{device_num}_track_id_{track_id}"):
+                os.remove(f"./device_{device_num}_track_id_{track_id}")
         except Exception as e:
             logging.warning(f"[DeleteFeatureMap] err: {e}")
             return edge_cloud_pb2.DeleteFeatureMapReply(success=False)
-        logging.info(f"[DeleteFeatureMap] delete storage for index: {track_id}")
+        logging.info(f"[DeleteFeatureMap] delete storage for index: {track_id}, "
+                     f"device: {device_num}")
         return edge_cloud_pb2.StoreFeatureMapReply(success=True)
 
 
@@ -114,15 +116,18 @@ class UploadImageService(edge_interface_pb2_grpc.UploadImageServicer):
             self.track_id += 1
         fu = FetchUtils(edge_addr, track_id, request.image)
         res = fu.launch()
+
         if aggregate(res):
-            return edge_interface_pb2.GetImageReply(label=0)
+            label = 0  # TODO
         else:
             channel = grpc.insecure_channel('localhost:50000')
             request = edge_cloud_pb2_grpc.NetworkSplitStub(channel)
             resp = request.CloudCompute(
                 edge_cloud_pb2.CloudComputeRequest(track_id=track_id)
             )
-            return edge_interface_pb2.GetImageReply(label=resp.label)
+            label = resp.label
+        fu.launch_threads(request=False)
+        return edge_interface_pb2.GetImageReply(label=label)
 
 
 class FetchUtils:
@@ -137,6 +142,13 @@ class FetchUtils:
         self.launch_threads()
         return self.res_collect
 
+    def trigger_and_delete(self, device_id, addr, track_id, _placeholder):
+        channel = grpc.insecure_channel(addr)
+        request = edge_internal_pb2_grpc.CollectorStub(channel)
+        _ = request.ClassifyResults(
+            edge_internal_pb2.ClassifyResultsRequest(track_id=track_id)
+        )
+
     def trigger_and_fetch(self, device_id, addr, track_id, image):
         channel = grpc.insecure_channel(addr)
         request = edge_internal_pb2_grpc.CollectorStub(channel)
@@ -149,10 +161,10 @@ class FetchUtils:
                          f"resp: {resp.results}")
             self.res_collect[device_id] = resp.results
 
-    def launch_threads(self):
+    def launch_threads(self, request=True):
         threads = []
         for device_id, device_addr in self.edge_addr.items():
-            t = Thread(target=self.trigger_and_fetch,
+            t = Thread(target=self.trigger_and_fetch if request else self.trigger_and_delete,
                        args=(device_id,
                              device_addr,
                              self.track_id,
