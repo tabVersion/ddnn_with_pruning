@@ -62,6 +62,8 @@ class TestCloudServer(unittest.TestCase):
         # cleaning up
         os.killpg(os.getpgid(edge1.pid), signal.SIGTERM)
         os.killpg(os.getpgid(edge2.pid), signal.SIGTERM)
+        edge1.wait()
+        edge2.wait()
 
 
 if __name__ == '__main__':
