@@ -11,6 +11,9 @@ edge_addr = dict()
 
 
 class NetworkSplitService(edge_cloud_pb2_grpc.NetworkSplitServicer):
+    def __init__(self):
+        super(NetworkSplitService, self).__init__()
+        self.fetch_mutex = Lock()
 
     def fetch_feature_map(self, idx, store, address='localhost:50050'):
         channel = grpc.insecure_channel(address)
@@ -20,9 +23,8 @@ class NetworkSplitService(edge_cloud_pb2_grpc.NetworkSplitServicer):
         )
         if not resp.success:
             return
-        # self.mutex.acquire()
-        store[idx] = list(resp.features)
-        # self.mutex.release()
+        with self.fetch_mutex:
+            store[idx] = list(resp.features)
         logging.info(f"[fetch_feature_map] fetch features: {list(resp.features)} index: {idx}")
 
     def CloudCompute(self, request, context):
