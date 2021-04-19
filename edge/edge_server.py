@@ -30,6 +30,7 @@ class EdgeStorage(edge_cloud_pb2_grpc.EdgeStorageServicer):
         features = list(request.features)
         logging.info(f"[EdgeStorage.StoreFeatureMap] track_id: {track_id},"
                      f"features: {features}")
+        return edge_cloud_pb2.StoreFeatureMapReply(success=True) # Test
         global device_num
         try:
             with open(f"./device_{device_num}_track_id_{track_id}", "wb") as f:
@@ -41,6 +42,9 @@ class EdgeStorage(edge_cloud_pb2_grpc.EdgeStorageServicer):
 
     def FetchFeatureMap(self, request, context):
         track_id = request.track_id
+        return edge_cloud_pb2.FetchFeatureMapReply(success=True,
+                                                   features=[1.0] + [0.0] * 9)
+        
         try:
             with open(f"./device_{device_num}_track_id_{track_id}", "rb") as f:
                 features = pickle.load(f)
@@ -86,6 +90,7 @@ class CollectorService(edge_internal_pb2_grpc.CollectorServicer):
         image = request.image
         results, feature_map = edge_compute(track_id, image)
 
+        s = int(time.time() * 1000)
         # TODO store feature map to local storage using rpc call
         global device_num
         try:
@@ -95,7 +100,7 @@ class CollectorService(edge_internal_pb2_grpc.CollectorServicer):
                          f"track_id: {track_id}, features: {feature_map}")
         except Exception as e:
             logging.warning(f"[ClassifyResults] err: {e}")
-
+        logging.info(f'[ClassifyResults] {int(time.time() * 1000) - s}ms')
         return edge_internal_pb2.ClassifyResultsReply(results=results)
 
 
@@ -116,7 +121,9 @@ class UploadImageService(edge_interface_pb2_grpc.UploadImageServicer):
 
     def GetImage(self, request, context):
         logging.info(f"[GetImage] get request: image: {request.image}")
+        s = int(time.time() * 1000)
         edge_addr = get_edge_address()
+        logging.info(f'[GetImage] get_edge_address: {int(time.time() * 1000) - s}ms')
         track_id = self.track_id
         with self.accumulate_mutex:
             self.track_id += 1
@@ -124,16 +131,21 @@ class UploadImageService(edge_interface_pb2_grpc.UploadImageServicer):
         fu = FetchUtils(edge_addr, track_id, request.image)
         res = fu.launch()
         logging.info(f'[GetImage] trigger & fetch: {get_cur_time() - s}ms')  # end
+
         if aggregate(res):
             label = 0  # TODO
         else:
             channel = grpc.insecure_channel('localhost:50000')
             request = edge_cloud_pb2_grpc.NetworkSplitStub(channel)
+            s = int(time.time() * 1000)
             resp = request.CloudCompute(
                 edge_cloud_pb2.CloudComputeRequest(track_id=track_id)
             )
+            logging.info(f'[GetImage] cloud compute: {int(time.time() * 1000) - s}ms')
             label = resp.label
+        s = int(time.time() * 1000)
         fu.launch_threads(request=False)
+        logging.info(f'[GetImage] delete request: {int(time.time() * 1000) - s}ms')
         return edge_interface_pb2.GetImageReply(label=label)
 
 
@@ -162,11 +174,14 @@ class FetchUtils:
         channel = grpc.insecure_channel(addr)
         s = get_cur_time()  # start
         request = edge_internal_pb2_grpc.CollectorStub(channel)
+        s = int(time.time() * 1000)
         resp = request.ClassifyResults(
             edge_internal_pb2.ClassifyResultsRequest(track_id=track_id,
                                                      image=image)
         )
+
         logging.info(f'[trigger_and_fetch] {get_cur_time() - s}ms')
+
         with self.collect_mutex:
             logging.info(f"[trigger_and_fetch] device: {device_id}, "
                          f"resp: {resp.results}")
@@ -181,13 +196,14 @@ class FetchUtils:
                              self.track_id,
                              self.image))
             t.start()
+            logging.info(f'[launch_threads] thread launched: device id: {device_id}, device_addr: {device_addr}')
             threads.append(t)
         for t in threads:
             t.join()
 
 
 def start_server(port=50050, standalone=False):
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=20))
     edge_cloud_pb2_grpc.add_EdgeStorageServicer_to_server(EdgeStorage(),
                                                           server)
     edge_internal_pb2_grpc.add_CollectorServicer_to_server(CollectorService(),
