@@ -5,7 +5,7 @@ import os
 import signal
 import subprocess
 import time
-
+from tqdm import tqdm 
 from protos import edge_cloud_pb2_grpc
 from protos import edge_cloud_pb2
 import cloud_server
@@ -49,6 +49,7 @@ class TestCloudServer(unittest.TestCase):
         resp = request.CloudCompute(
             edge_cloud_pb2.CloudComputeRequest(track_id=1)
         )
+ 
         self.assertEqual(resp.label, 0)
 
         # ===========

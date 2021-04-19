@@ -5,6 +5,7 @@ import signal
 import grpc
 import subprocess
 import time
+import numpy as np
 
 from protos import edge_interface_pb2
 from protos import edge_interface_pb2_grpc
@@ -45,6 +46,17 @@ class TestEdgeInterface(unittest.TestCase):
             edge_interface_pb2.GetImageRequest(image=[1, 2, 3])
         )
         self.assertEqual(resp.label, 0)
+        
+        # timer
+        t = []
+        for _ in range(1000):
+            s = int(time.time() * 1000)
+            resp = request.GetImage(
+                edge_interface_pb2.GetImageRequest(image=[1, 2, 3])
+            )
+            t.append(int(time.time() * 1000) - s)
+        logging.info(f'mean processing time: {np.array(t).mean()}')
+        
         os.killpg(os.getpgid(edge1.pid), signal.SIGTERM)
         os.killpg(os.getpgid(edge2.pid), signal.SIGTERM)
         os.killpg(os.getpgid(cloud_server.pid), signal.SIGTERM)

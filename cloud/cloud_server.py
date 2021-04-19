@@ -3,6 +3,7 @@ import argparse
 from concurrent import futures
 from threading import Lock
 import grpc
+import time
 
 from protos import edge_cloud_pb2
 from protos import edge_cloud_pb2_grpc
@@ -28,9 +29,13 @@ class NetworkSplitService(edge_cloud_pb2_grpc.NetworkSplitServicer):
         logging.info(f"[fetch_feature_map] fetch features: {list(resp.features)} index: {idx}")
 
     def CloudCompute(self, request, context):
+        global edge_addr
         features = [None] * 4
+        s = int(time.time() * 1000)
         for _, addr in edge_addr.items():
             self.fetch_feature_map(request.track_id, features, address=addr)
+        logging.info(f'[CloudCompute] fetch feature map: {int(time.time() * 1000) - s}ms')
+        time.sleep(0.002)
         logging.info(f"[CloudCompute] get request for id: {request.track_id}")
         return edge_cloud_pb2.CloudComputeReply(label=0)
 
