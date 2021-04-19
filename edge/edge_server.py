@@ -6,6 +6,7 @@ import os
 import argparse
 import socket
 from threading import Lock, Thread
+import time
 
 from computing_server import edge_compute, aggregate
 from protos import edge_cloud_pb2
@@ -16,6 +17,10 @@ from protos import edge_interface_pb2
 from protos import edge_interface_pb2_grpc
 
 device_num = None
+
+
+def get_cur_time():
+    return int(time.time() * 1000)
 
 
 class EdgeStorage(edge_cloud_pb2_grpc.EdgeStorageServicer):
@@ -115,9 +120,10 @@ class UploadImageService(edge_interface_pb2_grpc.UploadImageServicer):
         track_id = self.track_id
         with self.accumulate_mutex:
             self.track_id += 1
+        s = get_cur_time()  # start
         fu = FetchUtils(edge_addr, track_id, request.image)
         res = fu.launch()
-
+        logging.info(f'[GetImage] trigger & fetch: {get_cur_time() - s}ms')  # end
         if aggregate(res):
             label = 0  # TODO
         else:
@@ -145,18 +151,22 @@ class FetchUtils:
 
     def trigger_and_delete(self, device_id, addr, track_id, _placeholder):
         channel = grpc.insecure_channel(addr)
+        s = get_cur_time()  # start
         request = edge_internal_pb2_grpc.CollectorStub(channel)
         _ = request.ClassifyResults(
             edge_internal_pb2.ClassifyResultsRequest(track_id=track_id)
         )
+        logging.info(f'[trigger_and_delete] {get_cur_time() - s}ms')  # end
 
     def trigger_and_fetch(self, device_id, addr, track_id, image):
         channel = grpc.insecure_channel(addr)
+        s = get_cur_time()  # start
         request = edge_internal_pb2_grpc.CollectorStub(channel)
         resp = request.ClassifyResults(
             edge_internal_pb2.ClassifyResultsRequest(track_id=track_id,
                                                      image=image)
         )
+        logging.info(f'[trigger_and_fetch] {get_cur_time() - s}ms')
         with self.collect_mutex:
             logging.info(f"[trigger_and_fetch] device: {device_id}, "
                          f"resp: {resp.results}")
