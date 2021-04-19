@@ -5,7 +5,7 @@ import os
 import signal
 import subprocess
 import time
-from tqdm import tqdm 
+# from tqdm import tqdm 
 from protos import edge_cloud_pb2_grpc
 from protos import edge_cloud_pb2
 import cloud_server
