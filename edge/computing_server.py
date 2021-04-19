@@ -14,6 +14,7 @@ def edge_compute(track_id, image):
 
 def aggregate(res):
     logging.info(f"[aggregate] get edge results: {res}")
+    return False
     if random.random() > 0.8:
         logging.info(f"[aggregate] trigger cloud")
         return True
