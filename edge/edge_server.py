@@ -82,8 +82,9 @@ class CollectorService(edge_internal_pb2_grpc.CollectorServicer):
         results, feature_map = edge_compute(track_id, image)
 
         # TODO store feature map to local storage using rpc call
+        global device_num
         try:
-            with open(f"./track_id_{track_id}", "wb") as f:
+            with open(f"./device_{device_num}_track_id_{track_id}", "wb") as f:
                 pickle.dump(feature_map, f)
             logging.info(f"[ClassifyResults] store success: "
                          f"track_id: {track_id}, features: {feature_map}")
